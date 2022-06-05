@@ -17,14 +17,14 @@ const staNumber1TupleToString1Tuple2 = staNumber1Tuple.map((value) =>
 );
 
 const staNumber2Tuple = new StronglyTypedArray(number2Tuple);
-const staNumber2TupleToString1Tuple1 = staNumber2Tuple.map(String);
-const staNumber2TupleToString1Tuple2 = staNumber2Tuple.map((value) =>
+const staNumber2TupleToString2Tuple1 = staNumber2Tuple.map(String);
+const staNumber2TupleToString2Tuple2 = staNumber2Tuple.map((value) =>
   value.toString()
 );
 
 const staNumber3Tuple = new StronglyTypedArray(number3Tuple);
-const staNumber3TupleToString1Tuple1 = staNumber3Tuple.map(String);
-const staNumber3TupleToString1Tuple2 = staNumber3Tuple.map((value) =>
+const staNumber3TupleToString3Tuple1 = staNumber3Tuple.map(String);
+const staNumber3TupleToString3Tuple2 = staNumber3Tuple.map((value) =>
   value.toString()
 );
 
@@ -48,13 +48,13 @@ type cases = [
   >,
   AssertTrue<
     IsExact<
-      typeof staNumber2TupleToString1Tuple1,
+      typeof staNumber2TupleToString2Tuple1,
       StronglyTypedArray<[string, string]>
     >
   >,
   AssertTrue<
     IsExact<
-      typeof staNumber2TupleToString1Tuple2,
+      typeof staNumber2TupleToString2Tuple2,
       StronglyTypedArray<[string, string]>
     >
   >,
@@ -66,13 +66,13 @@ type cases = [
   >,
   AssertTrue<
     IsExact<
-      typeof staNumber3TupleToString1Tuple1,
+      typeof staNumber3TupleToString3Tuple1,
       StronglyTypedArray<[string, string, string]>
     >
   >,
   AssertTrue<
     IsExact<
-      typeof staNumber3TupleToString1Tuple2,
+      typeof staNumber3TupleToString3Tuple2,
       StronglyTypedArray<[string, string, string]>
     >
   >
