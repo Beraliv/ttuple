@@ -1,0 +1,23 @@
+{
+  "name": "strongly-typed-array",
+  "version": "0.0.1",
+  "description": "Strongly typed Array",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Beraliv/strongly-typed-array.git"
+  },
+  "keywords": [
+    "typescript",
+    "array"
+  ],
+  "author": "Alexey Berezin <beraliv.spb@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Beraliv/strongly-typed-array/issues"
+  },
+  "homepage": "https://github.com/Beraliv/strongly-typed-array#readme"
+}
