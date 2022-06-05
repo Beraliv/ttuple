@@ -23,9 +23,11 @@
     "url": "https://github.com/Beraliv/strongly-typed-array/issues"
   },
   "homepage": "https://github.com/Beraliv/strongly-typed-array#readme",
+  "dependencies": {
+    "typescript": "4.7.3"
+  },
   "devDependencies": {
     "conditional-type-checks": "1.0.5",
-    "tsup": "6.0.1",
-    "typescript": "4.7.3"
+    "tsup": "6.0.1"
   }
 }
