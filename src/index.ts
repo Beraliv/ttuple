@@ -20,6 +20,10 @@ class StronglyTypedArray<T extends AnyArray> {
     // @ts-expect-error: StronglyTypedArray<T> => StronglyTypedArray<U>
     return this;
   }
+
+  toArray(): T {
+    return this.#items;
+  }
 }
 
 export default StronglyTypedArray;
