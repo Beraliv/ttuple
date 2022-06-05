@@ -6,7 +6,8 @@
   "types": "index.d.ts",
   "type": "module",
   "scripts": {
-    "build": "tsup src/index.ts --format esm --dts"
+    "build": "tsup src/index.ts --format esm --dts",
+    "typecheck": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
