@@ -3,8 +3,10 @@
   "version": "0.0.1",
   "description": "Strongly typed Array",
   "main": "index.js",
+  "types": "index.d.ts",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsup src/index.ts --format esm --dts"
   },
   "repository": {
     "type": "git",
@@ -19,5 +21,10 @@
   "bugs": {
     "url": "https://github.com/Beraliv/strongly-typed-array/issues"
   },
-  "homepage": "https://github.com/Beraliv/strongly-typed-array#readme"
+  "homepage": "https://github.com/Beraliv/strongly-typed-array#readme",
+  "devDependencies": {
+    "conditional-type-checks": "1.0.5",
+    "tsup": "6.0.1",
+    "typescript": "4.7.3"
+  }
 }
