@@ -22,6 +22,4 @@ class StronglyTypedArray<T extends AnyArray> {
   }
 }
 
-[].map;
-
 export default StronglyTypedArray;
