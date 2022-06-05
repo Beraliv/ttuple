@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/Beraliv/strongly-typed-array/issues"
   },
-  "homepage": "https://github.com/Beraliv/strongly-typed-array#readme"
+  "homepage": "https://github.com/Beraliv/strongly-typed-array#readme",
+  "devDependencies": {
+    "tsup": "6.0.1"
+  }
 }
