@@ -6,7 +6,8 @@
   "types": "index.d.ts",
   "type": "module",
   "scripts": {
-    "build": "tsup src/index.ts --format esm --dts"
+    "build": "tsup src/index.ts --format esm --dts",
+    "typecheck": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
@@ -22,9 +23,11 @@
     "url": "https://github.com/Beraliv/strongly-typed-array/issues"
   },
   "homepage": "https://github.com/Beraliv/strongly-typed-array#readme",
+  "dependencies": {
+    "typescript": "4.7.3"
+  },
   "devDependencies": {
     "conditional-type-checks": "1.0.5",
-    "tsup": "6.0.1",
-    "typescript": "4.7.3"
+    "tsup": "6.0.1"
   }
 }
