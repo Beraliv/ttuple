@@ -49,6 +49,29 @@ type ToTuple<
     >
   : [...T, ...V[]];
 
+type Shift<T extends AnyArray> = T extends [any, ...infer Tail] ? Tail : [];
+
+type IsTuple<T> = any[] extends T ? false : true;
+
+type ParallelShift<T extends AnyArray, U extends AnyArray> = [] extends U
+  ? IsTuple<T> extends true
+    ? T[0]
+    : T[0] | undefined
+  : ParallelShift<Shift<T>, Shift<U>>;
+
+type Get<T extends AnyArray, N extends number> = ParallelShift<
+  T,
+  ToTuple<ElementOf<T>, `${N}`>
+>;
+
+type Combine<T, U> = T extends undefined
+  ? U extends undefined
+    ? T | U
+    : Exclude<T, undefined> | U
+  : U extends undefined
+  ? T | Exclude<U, undefined>
+  : T | U;
+
 class StronglyTypedArray<T extends AnyArray> {
   #items: T;
 
@@ -56,10 +79,41 @@ class StronglyTypedArray<T extends AnyArray> {
     this.#items = items;
   }
 
-  hasAtLeast<N extends number>(
-    length: N
-  ): this is StronglyTypedArray<ToTuple<ElementOf<T>, `${N}`>> {
-    return this.#items.length >= length;
+  /**
+   * Checks if array has at least N elements
+   * If so, executes `then` function with strictly typed array
+   * Otherwise, executes `else` with originally typed array. You can also throw an error here.
+   *
+   * @example
+   *
+   * const numbers: number[];
+   * const firstValue = staNumbers.length > 0 ? staNumbers[0] : defaultNumber;
+   *
+   * // is equal to
+   * const staNumbers: StronglyTypedArray<number[]>;
+   * const firstValue = staNumbers.hasAtLeast(0, (numbers) => numbers.at(0), defaultNumber);
+   */
+  hasAtLeast<N extends number, ThenReturnType, ElseReturnType>(
+    length: N,
+    thenFunction: (
+      value: StronglyTypedArray<ToTuple<ElementOf<T>, `${N}`>>
+    ) => ThenReturnType,
+    elseFunctionOrDefaultValue: (value: StronglyTypedArray<T>) => ElseReturnType
+  ): Combine<ThenReturnType, ElseReturnType> {
+    let result: ThenReturnType | ElseReturnType;
+    if (this.#items.length >= length) {
+      result = thenFunction(
+        this as unknown as StronglyTypedArray<ToTuple<ElementOf<T>, `${N}`>>
+      );
+    } else {
+      result = elseFunctionOrDefaultValue(this);
+    }
+    return result as Combine<ThenReturnType, ElseReturnType>;
+  }
+
+  // TODO: add negative index support
+  at<N extends number>(index: N): Get<T, N> {
+    return this.#items[index];
   }
 
   map<U>(callback: (value: Values<T>) => U): StronglyTypedArray<Map<T, U>> {
