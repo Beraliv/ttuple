@@ -1,5 +1,4 @@
 type AnyArray = readonly any[];
-type Values<T extends AnyArray> = T[number];
 
 type Map<T, U> = any[] extends T
   ? U[]
@@ -72,6 +71,23 @@ type Combine<T, U> = T extends undefined
   ? T | Exclude<U, undefined>
   : T | U;
 
+type AnyPredicate1<T extends AnyArray, U extends boolean = boolean> = (
+  value: ElementOf<T>
+) => U;
+
+type TupleToArray<T extends AnyArray> = ElementOf<T>[];
+
+type PredicateType<
+  Cb extends AnyPredicate1<T>,
+  T extends AnyArray
+> = Cb extends (value: any) => value is infer P
+  ? [P] extends [ElementOf<T>]
+    ? P[]
+    : TupleToArray<T>
+  : Cb extends (value: any) => boolean
+  ? TupleToArray<T>
+  : never;
+
 class StronglyTypedArray<T extends AnyArray> {
   #items: T;
 
@@ -116,9 +132,18 @@ class StronglyTypedArray<T extends AnyArray> {
     return this.#items[index];
   }
 
-  map<U>(callback: (value: Values<T>) => U): StronglyTypedArray<Map<T, U>> {
-    // @ts-expect-error: T[] => U[]
+  map<U>(callback: (value: ElementOf<T>) => U): StronglyTypedArray<Map<T, U>> {
+    // @ts-expect-error: T => U
     this.#items = this.#items.map(callback);
+    // @ts-expect-error: StronglyTypedArray<T> => StronglyTypedArray<U>
+    return this;
+  }
+
+  filter<Cb extends AnyPredicate1<T>>(
+    callback: Cb
+  ): StronglyTypedArray<PredicateType<Cb, T>> {
+    // @ts-expect-error: T => U
+    this.#items = this.#items.filter(callback);
     // @ts-expect-error: StronglyTypedArray<T> => StronglyTypedArray<U>
     return this;
   }
