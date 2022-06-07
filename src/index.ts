@@ -72,7 +72,8 @@ type Combine<T, U> = T extends undefined
   : T | U;
 
 type AnyPredicate1<T extends AnyArray, U extends boolean = boolean> = (
-  value: ElementOf<T>
+  value: ElementOf<T>,
+  index: number
 ) => U;
 
 type TupleToArray<T extends AnyArray> = ElementOf<T>[];
@@ -80,7 +81,7 @@ type TupleToArray<T extends AnyArray> = ElementOf<T>[];
 type PredicateType<
   Cb extends AnyPredicate1<T>,
   T extends AnyArray
-> = Cb extends (value: any) => value is infer P
+> = Cb extends (value: any, ...args: any[]) => value is infer P
   ? [P] extends [ElementOf<T>]
     ? P[]
     : TupleToArray<T>
@@ -132,7 +133,9 @@ class StronglyTypedArray<T extends AnyArray> {
     return this.#items[index];
   }
 
-  map<U>(callback: (value: ElementOf<T>) => U): StronglyTypedArray<Map<T, U>> {
+  map<U>(
+    callback: (value: ElementOf<T>, index: number) => U
+  ): StronglyTypedArray<Map<T, U>> {
     // @ts-expect-error: T => U
     this.#items = this.#items.map(callback);
     // @ts-expect-error: StronglyTypedArray<T> => StronglyTypedArray<U>
