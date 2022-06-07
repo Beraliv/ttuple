@@ -1,5 +1,5 @@
 import { AssertTrue, IsExact } from "conditional-type-checks";
-import StronglyTypedArray from ".";
+import StronglyTypedArray from "../src";
 
 declare const numbers: number[];
 declare const defaultNumber: number;
