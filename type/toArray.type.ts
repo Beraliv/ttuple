@@ -1,5 +1,5 @@
 import { AssertTrue, IsExact } from "conditional-type-checks";
-import StronglyTypedArray from ".";
+import StronglyTypedArray from "../src";
 
 declare const numbers: number[];
 declare const number1Tuple: [number];
@@ -36,5 +36,5 @@ type cases = [
   AssertTrue<IsExact<typeof string2Tuple1, [string, string]>>,
   AssertTrue<IsExact<typeof string2Tuple2, [string, string]>>,
   AssertTrue<IsExact<typeof string3Tuple1, [string, string, string]>>,
-  AssertTrue<IsExact<typeof string3Tuple1, [string, string, string]>>
+  AssertTrue<IsExact<typeof string3Tuple2, [string, string, string]>>
 ];
