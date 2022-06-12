@@ -2,70 +2,25 @@ import { AssertTrue, IsExact } from "conditional-type-checks";
 import StronglyTypedArray from "../src";
 
 declare const numbers: number[];
-declare const defaultNumber: number;
 
 const staNumbers = new StronglyTypedArray(numbers);
 
-const withDefaultValue = <N extends number, I extends number>(
-  length: N,
-  index: I
-) =>
-  staNumbers.hasAtLeast(
-    length,
-    (numbers) => numbers.at(index),
-    () => defaultNumber
-  );
-const withoutDefaultValue = <N extends number, I extends number>(
-  length: N,
-  index: I
-) =>
-  staNumbers.hasAtLeast(
-    length,
-    (numbers) => numbers.at(index),
-    () => undefined
-  );
-
-const W_00 = withDefaultValue(0, 0);
-const WO_00 = withoutDefaultValue(0, 0);
-const W_01 = withDefaultValue(0, 1);
-const WO_01 = withoutDefaultValue(0, 1);
-const W_02 = withDefaultValue(0, 2);
-const WO_02 = withoutDefaultValue(0, 2);
-
-const W_10 = withDefaultValue(1, 0);
-const WO_10 = withoutDefaultValue(1, 0);
-const W_11 = withDefaultValue(1, 1);
-const WO_11 = withoutDefaultValue(1, 1);
-const W_12 = withDefaultValue(1, 2);
-const WO_12 = withoutDefaultValue(1, 2);
-
-const W_20 = withDefaultValue(2, 0);
-const WO_20 = withoutDefaultValue(2, 0);
-const W_21 = withDefaultValue(2, 1);
-const WO_21 = withoutDefaultValue(2, 1);
-const W_22 = withDefaultValue(2, 2);
-const WO_22 = withoutDefaultValue(2, 2);
+const firstOptional = staNumbers.length('>= 0', () => new Error('Length cannot be negative')).at(0);
+const first = staNumbers.length('>= 1', () => new Error('Missing elements')).at(0);
+const secondOptional = staNumbers.length('>= 1', () => new Error('Missing elements')).at(1);
+const second = staNumbers.length('>= 2', () => new Error('Missing elements')).at(1);
+const beforeLastOptional = staNumbers.length('>= 1', () => new Error('Missing elements')).at(-2);
+const beforeLast = staNumbers.length('>= 2', () => new Error('Missing elements')).at(-2);
+const lastOptional = staNumbers.length('>= 0', () => new Error('Length cannot be negative')).at(-1);
+const last = staNumbers.length('>= 1', () => new Error('Missing elements')).at(-1);
 
 type cases = [
-  AssertTrue<IsExact<typeof staNumbers, StronglyTypedArray<number[]>>>,
-  AssertTrue<IsExact<typeof W_00, number>>,
-  AssertTrue<IsExact<typeof WO_00, number | undefined>>,
-  AssertTrue<IsExact<typeof W_01, number>>,
-  AssertTrue<IsExact<typeof WO_01, undefined>>,
-  AssertTrue<IsExact<typeof W_02, number>>,
-  AssertTrue<IsExact<typeof WO_02, undefined>>,
-
-  AssertTrue<IsExact<typeof W_10, number>>,
-  AssertTrue<IsExact<typeof WO_10, number>>,
-  AssertTrue<IsExact<typeof W_11, number>>,
-  AssertTrue<IsExact<typeof WO_11, number | undefined>>,
-  AssertTrue<IsExact<typeof W_12, number>>,
-  AssertTrue<IsExact<typeof WO_12, undefined>>,
-
-  AssertTrue<IsExact<typeof W_20, number>>,
-  AssertTrue<IsExact<typeof WO_20, number>>,
-  AssertTrue<IsExact<typeof W_21, number>>,
-  AssertTrue<IsExact<typeof WO_21, number>>,
-  AssertTrue<IsExact<typeof W_22, number>>,
-  AssertTrue<IsExact<typeof WO_22, number | undefined>>
+  AssertTrue<IsExact<typeof firstOptional, number | undefined>>,
+  AssertTrue<IsExact<typeof first, number>>,
+  AssertTrue<IsExact<typeof secondOptional, number | undefined>>,
+  AssertTrue<IsExact<typeof second, number>>,
+  AssertTrue<IsExact<typeof beforeLast, number>>,
+  AssertTrue<IsExact<typeof beforeLastOptional, number | undefined>>,
+  AssertTrue<IsExact<typeof last, number>>,
+  AssertTrue<IsExact<typeof lastOptional, number | undefined>>,
 ];
