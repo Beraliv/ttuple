@@ -139,8 +139,8 @@ class StronglyTypedArray<T extends AnyArray> {
 
 // `sta` is short for strongly typed array
 export const sta = <T extends AnyArray>(
-  items: T
-): StronglyTypedArray<T> => new StronglyTypedArray(items);
+  items: [...T]
+): StronglyTypedArray<[...T]> => new StronglyTypedArray(items);
 ```
 
 ### Supported methods
