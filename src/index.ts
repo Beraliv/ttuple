@@ -94,30 +94,51 @@ type LengthComparison = `>= ${number}`;
 
 type ExtractLength<S extends LengthComparison> = S extends `>= ${infer N}` ? `${N}` : `${number}`;
 
-// TODO: replace with ReturnType<typeof sta<T>> for TS@4.7
-interface StronglyTypedArray<T extends AnyArray> {
-  at<N extends number>(index: N): Get<T, `${N}`>;
-  filter<Cb extends AnyPredicate1<T>>(predicate: Cb): StronglyTypedArray<PredicateType<Cb, T>>;
-  length<S extends LengthComparison>(condition: S, orThrows: () => Error): StronglyTypedArray<ToTuple<ElementOf<T>, ExtractLength<S>>>;
-  map<U>(callback: (value: ElementOf<T>, index: number) => U): StronglyTypedArray<Map<T, U>>;
-  toArray(): T;
-}
+class StronglyTypedArray<T extends AnyArray> {
+  #items: T;
 
-const sta = <T extends AnyArray>(items: T): StronglyTypedArray<T> => ({
-  at: <N extends number>(index: N): Get<T, `${N}`> => items[index],
-  filter: <Cb extends AnyPredicate1<T>>(predicate: Cb) => sta(items.filter(predicate) as PredicateType<Cb, T>),
-  length: <S extends LengthComparison>(condition: S, orThrows: () => Error) => {
+  constructor(items: T) {
+    this.#items = items;
+  }
+
+  length<S extends LengthComparison>(condition: S, orThrows: () => Error): StronglyTypedArray<ToTuple<ElementOf<T>, ExtractLength<S>>> {
     const expectedLength = Number(condition.split(' ')[1]);
-
-    if (items.length >= expectedLength) {
-      return sta(items as unknown as ToTuple<ElementOf<T>, ExtractLength<S>>);
+    
+    if (this.#items.length >= expectedLength) {
+      return this as unknown as StronglyTypedArray<ToTuple<ElementOf<T>, ExtractLength<S>>>
     }
 
     throw orThrows();
-  },
-  map: <U>(callback: (value: ElementOf<T>, index: number) => U) => sta(items.map(callback) as Map<T, U>),
-  toArray: () => items,
-});
+  }
+
+  at<N extends number, S extends string = `${N}`>(index: N): Get<T, S> {
+    return this.#items[index];
+  }
+
+  map<U>(
+    callback: (value: ElementOf<T>, index: number) => U
+  ): StronglyTypedArray<Map<T, U>> {
+    // @ts-expect-error: T => U
+    this.#items = this.#items.map(callback);
+    // @ts-expect-error: StronglyTypedArray<T> => StronglyTypedArray<U>
+    return this;
+  }
+
+  filter<Cb extends AnyPredicate1<T>>(
+    callback: Cb
+  ): StronglyTypedArray<PredicateType<Cb, T>> {
+    // @ts-expect-error: T => U
+    this.#items = this.#items.filter(callback);
+    // @ts-expect-error: StronglyTypedArray<T> => StronglyTypedArray<U>
+    return this;
+  }
+
+  toArray(): T {
+    return this.#items;
+  }
+}
+
+export const sta = <T extends AnyArray>(items: T): StronglyTypedArray<T> => new StronglyTypedArray(items);
 
 export default sta;
-export type {StronglyTypedArray}
+export type { StronglyTypedArray };
