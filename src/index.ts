@@ -124,15 +124,6 @@ class StronglyTypedArray<T extends AnyArray> {
     return this;
   }
 
-  filter<Cb extends AnyPredicate1<T>>(
-    callback: Cb
-  ): StronglyTypedArray<PredicateType<Cb, T>> {
-    // @ts-expect-error: T => U
-    this.#items = this.#items.filter(callback);
-    // @ts-expect-error: StronglyTypedArray<T> => StronglyTypedArray<U>
-    return this;
-  }
-
   toArray(): T {
     return this.#items;
   }
