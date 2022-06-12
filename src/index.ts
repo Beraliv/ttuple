@@ -72,23 +72,7 @@ type Get<T extends AnyArray, N extends string> = N extends `-${infer M}`
     ? ParallelShift<T, ToTuple<ElementOf<T>, N>>
     : never;
 
-type AnyPredicate1<T extends AnyArray, U extends boolean = boolean> = (
-  value: ElementOf<T>,
-  index: number
-) => U;
-
 type TupleToArray<T extends AnyArray> = ElementOf<T>[];
-
-type PredicateType<
-  Cb extends AnyPredicate1<T>,
-  T extends AnyArray
-> = Cb extends (value: any, ...args: any[]) => value is infer P
-  ? [P] extends [ElementOf<T>]
-    ? P[]
-    : TupleToArray<T>
-  : Cb extends (value: any) => boolean
-  ? TupleToArray<T>
-  : never;
 
 type LengthComparison = `>= ${number}`;
 
@@ -129,7 +113,9 @@ class StronglyTypedArray<T extends AnyArray> {
   }
 }
 
-export const sta = <T extends AnyArray>(items: [...T]): StronglyTypedArray<[...T]> => new StronglyTypedArray(items);
+export const sta = <T extends AnyArray>(
+  items: [...T]
+): StronglyTypedArray<[...T]> => new StronglyTypedArray(items);
 
 export default sta;
 export type { StronglyTypedArray };
