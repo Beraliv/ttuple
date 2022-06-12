@@ -46,9 +46,9 @@ type ToTuple<
       Rest,
       Add<Multiply10<T>, DigitMapping<V>[D & keyof DigitMapping<V>]>
     >
-  : [...T, ...V[]];
+  : [...T, ...V[], ...T];
 
-type Shift<T extends AnyArray> = T extends [any, ...infer Tail] ? Tail : [];
+type Shift<T extends AnyArray> = T extends [any, ...infer Tail] ? Tail : TupleToArray<T>;
 
 type IsTuple<T> = any[] extends T ? false : true;
 
@@ -58,10 +58,19 @@ type ParallelShift<T extends AnyArray, U extends AnyArray> = [] extends U
     : T[0] | undefined
   : ParallelShift<Shift<T>, Shift<U>>;
 
-type Get<T extends AnyArray, N extends number> = ParallelShift<
-  T,
-  ToTuple<ElementOf<T>, `${N}`>
->;
+type Pop<T extends AnyArray> = T extends [...infer Head, any] ? Head : TupleToArray<T>;
+
+type ParallelPop<T extends AnyArray, U extends AnyArray> = [] extends U
+  ? IsTuple<T> extends true
+    ? T[0]
+    : T[0] | undefined
+  : ParallelPop<Pop<T>, Pop<U>>;
+
+type Get<T extends AnyArray, N extends string> = N extends `-${infer M}`
+  ? ParallelPop<[ElementOf<T>, ...T, ElementOf<T>], ToTuple<ElementOf<T>, M>>
+  : N extends `${number}`
+    ? ParallelShift<T, ToTuple<ElementOf<T>, N>>
+    : never;
 
 type AnyPredicate1<T extends AnyArray, U extends boolean = boolean> = (
   value: ElementOf<T>,
@@ -102,8 +111,7 @@ class StronglyTypedArray<T extends AnyArray> {
     throw orThrows();
   }
 
-  // TODO: add negative index support
-  at<N extends number>(index: N): Get<T, N> {
+  at<N extends number, S extends string = `${N}`>(index: N): Get<T, S> {
     return this.#items[index];
   }
 
