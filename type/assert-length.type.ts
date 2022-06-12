@@ -6,37 +6,40 @@ declare const numbers: number[];
 const staNumbers = sta(numbers);
 
 const sameNumbers = staNumbers
-  .length(">= 0", () => new Error("Length cannot be negative"))
+  .assertLength(">= 0", () => new Error("Length cannot be negative"))
   .toArray();
 const numbers1 = staNumbers
-  .length(">= 1", () => new Error("Expected to have at least 1 element"))
+  .assertLength(">= 1", () => new Error("Expected to have at least 1 element"))
   .toArray();
 const numbers2 = staNumbers
-  .length(">= 2", () => new Error("Expected to have at least 2 element"))
+  .assertLength(">= 2", () => new Error("Expected to have at least 2 element"))
   .toArray();
 const numbers3 = staNumbers
-  .length(">= 3", () => new Error("Expected to have at least 3 element"))
+  .assertLength(">= 3", () => new Error("Expected to have at least 3 element"))
   .toArray();
 const numbers4 = staNumbers
-  .length(">= 4", () => new Error("Expected to have at least 4 element"))
+  .assertLength(">= 4", () => new Error("Expected to have at least 4 element"))
   .toArray();
 const numbers5 = staNumbers
-  .length(">= 5", () => new Error("Expected to have at least 5 element"))
+  .assertLength(">= 5", () => new Error("Expected to have at least 5 element"))
   .toArray();
 const numbers6 = staNumbers
-  .length(">= 6", () => new Error("Expected to have at least 6 element"))
+  .assertLength(">= 6", () => new Error("Expected to have at least 6 element"))
   .toArray();
 const numbers7 = staNumbers
-  .length(">= 7", () => new Error("Expected to have at least 7 element"))
+  .assertLength(">= 7", () => new Error("Expected to have at least 7 element"))
   .toArray();
 const numbers8 = staNumbers
-  .length(">= 8", () => new Error("Expected to have at least 8 element"))
+  .assertLength(">= 8", () => new Error("Expected to have at least 8 element"))
   .toArray();
 const numbers9 = staNumbers
-  .length(">= 9", () => new Error("Expected to have at least 9 element"))
+  .assertLength(">= 9", () => new Error("Expected to have at least 9 element"))
   .toArray();
 const numbers10 = staNumbers
-  .length(">= 10", () => new Error("Expected to have at least 10 element"))
+  .assertLength(
+    ">= 10",
+    () => new Error("Expected to have at least 10 element")
+  )
   .toArray();
 
 type cases = [

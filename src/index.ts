@@ -48,7 +48,9 @@ type ToTuple<
     >
   : [...T, ...V[], ...T];
 
-type Shift<T extends AnyArray> = T extends [any, ...infer Tail] ? Tail : TupleToArray<T>;
+type Shift<T extends AnyArray> = T extends [any, ...infer Tail]
+  ? Tail
+  : TupleToArray<T>;
 
 type IsTuple<T> = any[] extends T ? false : true;
 
@@ -58,7 +60,9 @@ type ParallelShift<T extends AnyArray, U extends AnyArray> = [] extends U
     : T[0] | undefined
   : ParallelShift<Shift<T>, Shift<U>>;
 
-type Pop<T extends AnyArray> = T extends [...infer Head, any] ? Head : TupleToArray<T>;
+type Pop<T extends AnyArray> = T extends [...infer Head, any]
+  ? Head
+  : TupleToArray<T>;
 
 type ParallelPop<T extends AnyArray, U extends AnyArray> = [] extends U
   ? IsTuple<T> extends true
@@ -69,14 +73,16 @@ type ParallelPop<T extends AnyArray, U extends AnyArray> = [] extends U
 type Get<T extends AnyArray, N extends string> = N extends `-${infer M}`
   ? ParallelPop<[ElementOf<T>, ...T, ElementOf<T>], ToTuple<ElementOf<T>, M>>
   : N extends `${number}`
-    ? ParallelShift<T, ToTuple<ElementOf<T>, N>>
-    : never;
+  ? ParallelShift<T, ToTuple<ElementOf<T>, N>>
+  : never;
 
 type TupleToArray<T extends AnyArray> = ElementOf<T>[];
 
 type LengthComparison = `>= ${number}`;
 
-type ExtractLength<S extends LengthComparison> = S extends `>= ${infer N}` ? `${N}` : `${number}`;
+type ExtractLength<S extends LengthComparison> = S extends `>= ${infer N}`
+  ? `${N}`
+  : `${number}`;
 
 class StronglyTypedArray<T extends AnyArray> {
   #items: T;
@@ -85,11 +91,16 @@ class StronglyTypedArray<T extends AnyArray> {
     this.#items = items;
   }
 
-  length<S extends LengthComparison>(condition: S, orThrows: () => Error): StronglyTypedArray<ToTuple<ElementOf<T>, ExtractLength<S>>> {
-    const expectedLength = Number(condition.split(' ')[1]);
-    
+  assertLength<S extends LengthComparison>(
+    condition: S,
+    orThrows: () => Error
+  ): StronglyTypedArray<ToTuple<ElementOf<T>, ExtractLength<S>>> {
+    const expectedLength = Number(condition.split(" ")[1]);
+
     if (this.#items.length >= expectedLength) {
-      return this as unknown as StronglyTypedArray<ToTuple<ElementOf<T>, ExtractLength<S>>>
+      return this as unknown as StronglyTypedArray<
+        ToTuple<ElementOf<T>, ExtractLength<S>>
+      >;
     }
 
     throw orThrows();
