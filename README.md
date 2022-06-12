@@ -97,3 +97,17 @@ const lastSegment = sta(segments)
 lastSegment
 // ^? const lastSegment: Segment
 ```
+
+## API
+
+```ts
+// `sta` is short for strongly typed array
+export const sta = <T extends AnyArray>(
+  items: T
+): StronglyTypedArray<T> => new StronglyTypedArray(items);
+```
+
+### Supported methods
+
+* `length` (with `>=` comparator)
+* `map`
