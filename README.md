@@ -11,7 +11,7 @@ It's recommended to enable [noPropertyAccessFromIndexSignature](https://www.type
 1. Creates tuples
 
 ```ts
-import sta from 'strict-typed-array';
+import sta from "strict-typed-array";
 
 class Segment {
   public bitrate: number = -1;
@@ -21,21 +21,21 @@ class Segment {
 
 const segments = [new Segment()];
 
-segments
+segments;
 // ^? const segments: Segment[]
 
 // ✅ With strict-typed-array
 
-const segments = sta([new Segment()).toArray();
+const segments = sta([new Segment()]).toArray();
 
-segments
+segments;
 // ^? const segments: [Segment]
 ```
 
 2. Iterates over array and saves tuple type
 
 ```ts
-import sta from 'strict-typed-array';
+import sta from "strict-typed-array";
 
 class Segment {
   public bitrate: number = -1;
@@ -45,25 +45,25 @@ class Segment {
 
 const segments: [Segment] = [new Segment()];
 
-const bitrates = segments.map(segment => segment.bitrate);
+const bitrates = segments.map((segment) => segment.bitrate);
 
-bitrates
+bitrates;
 // ^? const bitrates = number[]
 
 // ✅ With strict-typed-array
 
 const bitrates = sta([new Segment()])
-    .map((segment) => segment.bitrate)
-    .toArray();
+  .map((segment) => segment.bitrate)
+  .toArray();
 
-bitrates
+bitrates;
 // ^? const bitrates = [number]
 ```
 
 3. Checks array length and returns array element
 
 ```ts
-import sta from 'strict-typed-array';
+import sta from "strict-typed-array";
 
 class Segment {
   public bitrate: number = -1;
@@ -74,26 +74,26 @@ const segments: Segment[] = [];
 // ❌ Without strict-typed-array
 
 if (segments.length < 1) {
-    throw new Error('Missing segment element');
+  throw new Error("Missing segment element");
 }
 
 const firstSegment = segments[0];
 
-firstSegment
+firstSegment;
 // ^? const firstSegment: Segment | undefined
 
 // ✅ With strict-typed-array
 
 const firstSegment = sta(segments)
-    .length('>= 1', () => new Error('Missing segment element'))
-    .at(0);
+  .length(">= 1", () => new Error("Missing segment element"))
+  .at(0);
 
-firstSegment
+firstSegment;
 // ^? const firstSegment: Segment
 ```
 
 ```ts
-import sta from 'strict-typed-array';
+import sta from "strict-typed-array";
 
 class Segment {
   public bitrate: number = -1;
@@ -104,21 +104,21 @@ const segments: Segment[] = [];
 // ❌ Without strict-typed-array
 
 if (segments.length < 1) {
-    throw new Error('Missing segment element');
+  throw new Error("Missing segment element");
 }
 
 const lastSegment = segments[segments.length - 1];
 
-lastSegment
+lastSegment;
 // ^? const lastSegment: Segment | undefined
 
 // ✅ With strict-typed-array
 
 const lastSegment = sta(segments)
-    .length('>= 1', () => new Error('Missing segment element'))
-    .at(-1);
+  .length(">= 1", () => new Error("Missing segment element"))
+  .at(-1);
 
-lastSegment
+lastSegment;
 // ^? const lastSegment: Segment
 ```
 
@@ -127,8 +127,11 @@ lastSegment
 ```ts
 class StronglyTypedArray<T extends AnyArray> {
   at<N extends number, S extends string = `${N}`>(index: N): Get<T, S>;
-  
-  length<S extends LengthComparison>(condition: S, orThrows: () => Error): StronglyTypedArray<ToTuple<ElementOf<T>, ExtractLength<S>>>;
+
+  length<S extends LengthComparison>(
+    condition: S,
+    orThrows: () => Error
+  ): StronglyTypedArray<ToTuple<ElementOf<T>, ExtractLength<S>>>;
 
   map<U>(
     callback: (value: ElementOf<T>, index: number) => U
@@ -145,5 +148,5 @@ export const sta = <T extends AnyArray>(
 
 ### Supported methods
 
-* `length` (with `>=` comparator)
-* `map`
+- `length` (with `>=` comparator)
+- `map`
