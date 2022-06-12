@@ -21,7 +21,7 @@ type DigitMapping<T> = {
   "9": [T, T, T, T, T, T, T, T, T];
 };
 
-type Multiply10<T extends readonly any[]> = [
+type Multiply10<T extends AnyArray> = [
   ...T,
   ...T,
   ...T,
@@ -34,12 +34,12 @@ type Multiply10<T extends readonly any[]> = [
   ...T
 ];
 
-type Add<N1 extends readonly any[], N2 extends readonly any[]> = [...N1, ...N2];
+type Add<N1 extends AnyArray, N2 extends AnyArray> = [...N1, ...N2];
 
 type ToTuple<
   V,
   S extends string,
-  T extends readonly any[] = []
+  T extends AnyArray = []
 > = S extends `${infer D}${infer Rest}`
   ? ToTuple<
       V,
