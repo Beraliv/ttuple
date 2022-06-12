@@ -8,7 +8,7 @@ It's recommended to enable [noPropertyAccessFromIndexSignature](https://www.type
 
 ## How to use
 
-1. Iterates over array and saves tuple type
+1. Creates tuples
 
 ```ts
 import sta from 'strict-typed-array';
@@ -17,9 +17,33 @@ class Segment {
   public bitrate: number = -1;
 }
 
-const segments: [Segment, ...Segment[]] = [new Segment()];
+// ❌ Without strict-typed-array
+
+const segments = [new Segment()];
+
+segments
+// ^? const segments: Segment[]
+
+// ✅ With strict-typed-array
+
+const segments = sta([new Segment()).toArray();
+
+segments
+// ^? const segments: [Segment]
+```
+
+2. Iterates over array and saves tuple type
+
+```ts
+import sta from 'strict-typed-array';
+
+class Segment {
+  public bitrate: number = -1;
+}
 
 // ❌ Without strict-typed-array
+
+const segments: [Segment] = [new Segment()];
 
 const bitrates = segments.map(segment => segment.bitrate);
 
@@ -28,15 +52,15 @@ bitrates
 
 // ✅ With strict-typed-array
 
-const bitrates = sta(segments)
+const bitrates = sta([new Segment()])
     .map((segment) => segment.bitrate)
     .toArray();
 
 bitrates
-// ^? const bitrates = [number, ...number[]]
+// ^? const bitrates = [number]
 ```
 
-2. Checks array length and returns array element
+3. Checks array length and returns array element
 
 ```ts
 import sta from 'strict-typed-array';
@@ -101,6 +125,18 @@ lastSegment
 ## API
 
 ```ts
+class StronglyTypedArray<T extends AnyArray> {
+  at<N extends number, S extends string = `${N}`>(index: N): Get<T, S>;
+  
+  length<S extends LengthComparison>(condition: S, orThrows: () => Error): StronglyTypedArray<ToTuple<ElementOf<T>, ExtractLength<S>>>;
+
+  map<U>(
+    callback: (value: ElementOf<T>, index: number) => U
+  ): StronglyTypedArray<Map<T, U>>;
+
+  toArray(): T;
+}
+
 // `sta` is short for strongly typed array
 export const sta = <T extends AnyArray>(
   items: T
