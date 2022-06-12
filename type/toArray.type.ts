@@ -1,5 +1,5 @@
 import { AssertTrue, IsExact } from "conditional-type-checks";
-import sta, {StronglyTypedArray} from "../src";
+import sta from "../src";
 
 declare const numbers: number[];
 declare const number1Tuple: [number];
