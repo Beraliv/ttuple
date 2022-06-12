@@ -63,14 +63,6 @@ type Get<T extends AnyArray, N extends number> = ParallelShift<
   ToTuple<ElementOf<T>, `${N}`>
 >;
 
-type Combine<T, U> = T extends undefined
-  ? U extends undefined
-    ? T | U
-    : Exclude<T, undefined> | U
-  : U extends undefined
-  ? T | Exclude<U, undefined>
-  : T | U;
-
 type AnyPredicate1<T extends AnyArray, U extends boolean = boolean> = (
   value: ElementOf<T>,
   index: number
@@ -89,6 +81,10 @@ type PredicateType<
   ? TupleToArray<T>
   : never;
 
+type LengthComparison = `>= ${number}`;
+
+type ExtractLength<S extends LengthComparison> = S extends `>= ${infer N}` ? `${N}` : `${number}`;
+
 class StronglyTypedArray<T extends AnyArray> {
   #items: T;
 
@@ -96,36 +92,14 @@ class StronglyTypedArray<T extends AnyArray> {
     this.#items = items;
   }
 
-  /**
-   * Checks if array has at least N elements
-   * If so, executes `then` function with strictly typed array
-   * Otherwise, executes `else` with originally typed array. You can also throw an error here.
-   *
-   * @example
-   *
-   * const numbers: number[];
-   * const firstValue = staNumbers.length > 0 ? staNumbers[0] : defaultNumber;
-   *
-   * // is equal to
-   * const staNumbers: StronglyTypedArray<number[]>;
-   * const firstValue = staNumbers.hasAtLeast(0, (numbers) => numbers.at(0), defaultNumber);
-   */
-  hasAtLeast<N extends number, ThenReturnType, ElseReturnType>(
-    length: N,
-    thenFunction: (
-      value: StronglyTypedArray<ToTuple<ElementOf<T>, `${N}`>>
-    ) => ThenReturnType,
-    elseFunctionOrDefaultValue: (value: StronglyTypedArray<T>) => ElseReturnType
-  ): Combine<ThenReturnType, ElseReturnType> {
-    let result: ThenReturnType | ElseReturnType;
-    if (this.#items.length >= length) {
-      result = thenFunction(
-        this as unknown as StronglyTypedArray<ToTuple<ElementOf<T>, `${N}`>>
-      );
-    } else {
-      result = elseFunctionOrDefaultValue(this);
+  length<S extends LengthComparison>(condition: S, orThrows: () => Error): StronglyTypedArray<ToTuple<ElementOf<T>, ExtractLength<S>>> {
+    const expectedLength = Number(condition.split(' ')[1]);
+    
+    if (this.#items.length >= expectedLength) {
+      return this as unknown as StronglyTypedArray<ToTuple<ElementOf<T>, ExtractLength<S>>>
     }
-    return result as Combine<ThenReturnType, ElseReturnType>;
+
+    throw orThrows();
   }
 
   // TODO: add negative index support
