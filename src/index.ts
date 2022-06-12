@@ -138,4 +138,7 @@ class StronglyTypedArray<T extends AnyArray> {
   }
 }
 
-export default StronglyTypedArray;
+export const sta = <T extends AnyArray>(items: T): StronglyTypedArray<T> => new StronglyTypedArray(items);
+
+export default sta;
+export type { StronglyTypedArray };
