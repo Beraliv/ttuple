@@ -54,10 +54,12 @@ type Shift<T extends AnyArray> = T extends [any, ...infer Tail]
 
 type IsTuple<T> = any[] extends T ? false : true;
 
+type First<T extends AnyArray> = T[0];
+
 type ParallelShift<T extends AnyArray, U extends AnyArray> = [] extends U
   ? IsTuple<T> extends true
-    ? T[0]
-    : T[0] | undefined
+    ? First<T>
+    : First<T> | undefined
   : ParallelShift<Shift<T>, Shift<U>>;
 
 type Pop<T extends AnyArray> = T extends [...infer Head, any]
@@ -66,11 +68,15 @@ type Pop<T extends AnyArray> = T extends [...infer Head, any]
 
 type ParallelPop<T extends AnyArray, U extends AnyArray> = [] extends U
   ? IsTuple<T> extends true
-    ? T[0]
-    : T[0] | undefined
+    ? First<T>
+    : First<T> | undefined
   : ParallelPop<Pop<T>, Pop<U>>;
 
-type Get<T extends AnyArray, N extends string> = N extends `-${infer M}`
+type IsEmptyTuple<T extends AnyArray> = T extends [] ? true : false;
+
+type Get<T extends AnyArray, N extends string> = IsEmptyTuple<T> extends true
+  ? undefined
+  : N extends `-${infer M}`
   ? ParallelPop<[ElementOf<T>, ...T, ElementOf<T>], ToTuple<ElementOf<T>, M>>
   : N extends `${number}`
   ? ParallelShift<T, ToTuple<ElementOf<T>, N>>
@@ -88,8 +94,8 @@ const toTuple = <T extends AnyArray>(array: [...T]): T => array;
 
 const at =
   <N extends number, S extends string = `${N}`>(index: N) =>
-  <T extends AnyArray>(array: [...T]): Get<T, S> =>
-    array[index];
+  <T extends AnyArray>(array: [...T]) =>
+    array.at(index) as Get<T, S>;
 
 const first = at(0);
 const second = at(1);
