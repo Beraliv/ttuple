@@ -86,6 +86,16 @@ type ExtractLength<S extends LengthComparison> = S extends `>= ${infer N}`
 
 const toTuple = <T extends AnyArray>(array: [...T]): T => array;
 
+const at =
+  <N extends number, S extends string = `${N}`>(index: N) =>
+  <T extends AnyArray>(array: [...T]): Get<T, S> =>
+    array[index];
+
+const first = at(0);
+const second = at(1);
+const secondToLast = at(-2);
+const last = at(-1);
+
 class StronglyTypedArray<T extends AnyArray> {
   #items: T;
 
@@ -131,4 +141,4 @@ export const sta = <T extends AnyArray>(
 ): StronglyTypedArray<[...T]> => new StronglyTypedArray(items);
 
 export default sta;
-export { StronglyTypedArray, toTuple };
+export { StronglyTypedArray, at, toTuple, first, second, secondToLast, last };
