@@ -11,7 +11,7 @@ It's recommended to enable [noPropertyAccessFromIndexSignature](https://www.type
 1. Creates tuples
 
 ```ts
-import sta from 'ttuple';
+import { toTuple } from "ttuple";
 
 class Segment {
   public bitrate: number = -1;
@@ -21,14 +21,14 @@ class Segment {
 
 const segments = [new Segment()];
 
-segments
+segments;
 // ^? const segments: Segment[]
 
 // ✅ With ttuple
 
-const segments = sta([new Segment()).toArray();
+const segments = toTuple([new Segment()]);
 
-segments
+segments;
 // ^? const segments: [Segment]
 ```
 
