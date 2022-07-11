@@ -11,20 +11,20 @@ It's recommended to enable [noPropertyAccessFromIndexSignature](https://www.type
 1. Creates tuples
 
 ```ts
-import sta from 'strict-typed-array';
+import sta from 'ttuple';
 
 class Segment {
   public bitrate: number = -1;
 }
 
-// ❌ Without strict-typed-array
+// ❌ Without ttuple
 
 const segments = [new Segment()];
 
 segments
 // ^? const segments: Segment[]
 
-// ✅ With strict-typed-array
+// ✅ With ttuple
 
 const segments = sta([new Segment()).toArray();
 
@@ -35,13 +35,13 @@ segments
 2. Iterates over array and saves tuple type
 
 ```ts
-import sta from "strict-typed-array";
+import sta from "ttuple";
 
 class Segment {
   public bitrate: number = -1;
 }
 
-// ❌ Without strict-typed-array
+// ❌ Without ttuple
 
 const segments: [Segment] = [new Segment()];
 
@@ -50,7 +50,7 @@ const bitrates = segments.map((segment) => segment.bitrate);
 bitrates;
 // ^? const bitrates = number[]
 
-// ✅ With strict-typed-array
+// ✅ With ttuple
 
 const bitrates = sta([new Segment()])
   .map((segment) => segment.bitrate)
@@ -63,7 +63,7 @@ bitrates;
 3. Checks array length and returns array element
 
 ```ts
-import sta from "strict-typed-array";
+import sta from "ttuple";
 
 class Segment {
   public bitrate: number = -1;
@@ -71,7 +71,7 @@ class Segment {
 
 const segments: Segment[] = [];
 
-// ❌ Without strict-typed-array
+// ❌ Without ttuple
 
 if (segments.length < 1) {
   throw new Error("Missing segment element");
@@ -82,7 +82,7 @@ const firstSegment = segments[0];
 firstSegment;
 // ^? const firstSegment: Segment | undefined
 
-// ✅ With strict-typed-array
+// ✅ With ttuple
 
 const firstSegment = sta(segments)
   .length(">= 1", () => new Error("Missing segment element"))
@@ -93,7 +93,7 @@ firstSegment;
 ```
 
 ```ts
-import sta from "strict-typed-array";
+import sta from "ttuple";
 
 class Segment {
   public bitrate: number = -1;
@@ -101,7 +101,7 @@ class Segment {
 
 const segments: Segment[] = [];
 
-// ❌ Without strict-typed-array
+// ❌ Without ttuple
 
 if (segments.length < 1) {
   throw new Error("Missing segment element");
@@ -112,7 +112,7 @@ const lastSegment = segments[segments.length - 1];
 lastSegment;
 // ^? const lastSegment: Segment | undefined
 
-// ✅ With strict-typed-array
+// ✅ With ttuple
 
 const lastSegment = sta(segments)
   .length(">= 1", () => new Error("Missing segment element"))
