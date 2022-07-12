@@ -1,25 +1,14 @@
 import { AnyArray } from "./types/AnyArray";
 import { ElementOf } from "./types/ElementOf";
-import { IsTuple } from "./types/IsTuple";
+import { ParallelPop } from "./types/ParallelPop";
 import { ParallelShift } from "./types/ParallelShift";
 import { ToTuple } from "./types/ToTuple";
-import { TupleToArray } from "./types/TupleToArray";
 
 type Map<T, U> = any[] extends T
   ? U[]
   : T extends [any, ...infer Tail]
   ? [U, ...Map<Tail, U>]
   : [];
-
-type Pop<T extends AnyArray> = T extends [...infer Head, any]
-  ? Head
-  : TupleToArray<T>;
-
-type ParallelPop<T extends AnyArray, U extends AnyArray> = [] extends U
-  ? IsTuple<T> extends true
-    ? T[0]
-    : T[0] | undefined
-  : ParallelPop<Pop<T>, Pop<U>>;
 
 type Get<T extends AnyArray, N extends string> = N extends `-${infer M}`
   ? ParallelPop<[ElementOf<T>, ...T, ElementOf<T>], ToTuple<ElementOf<T>, M>>
