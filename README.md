@@ -61,7 +61,7 @@ bitrates;
 3. Checks array length and returns array element
 
 ```ts
-import sta from "ttuple";
+import { first, length } from "ttuple";
 
 class Segment {
   public bitrate: number = -1;
@@ -82,16 +82,18 @@ firstSegment;
 
 // ✅ With ttuple
 
-const firstSegment = sta(segments)
-  .length(">= 1", () => new Error("Missing segment element"))
-  .at(0);
+if (!length(segments, ">= 1")) {
+  throw new Error("Missing segment element");
+}
+
+const firstSegment = first(segments);
 
 firstSegment;
 // ^? const firstSegment: Segment
 ```
 
 ```ts
-import sta from "ttuple";
+import { length, last } from "ttuple";
 
 class Segment {
   public bitrate: number = -1;
@@ -112,9 +114,11 @@ lastSegment;
 
 // ✅ With ttuple
 
-const lastSegment = sta(segments)
-  .length(">= 1", () => new Error("Missing segment element"))
-  .at(-1);
+if (!length(segments, ">= 1")) {
+  throw new Error("Missing segment element");
+}
+
+const lastSegment = last(segments);
 
 lastSegment;
 // ^? const lastSegment: Segment
@@ -123,28 +127,27 @@ lastSegment;
 ## API
 
 ```ts
-class StronglyTypedArray<T extends AnyArray> {
-  at<N extends number, S extends string = `${N}`>(index: N): Get<T, S>;
+const toTuple: <T extends AnyArray>(array: [...T]) => T;
 
-  length<S extends LengthComparison>(
-    condition: S,
-    orThrows: () => Error
-  ): StronglyTypedArray<ToTuple<ElementOf<T>, ExtractLength<S>>>;
+const at: <N extends number>(
+  index: N
+) => <T extends AnyArray>(array: [...T]) => At<T, `${N}`>;
 
-  map<U>(
-    callback: (value: ElementOf<T>, index: number) => U
-  ): StronglyTypedArray<Map<T, U>>;
+const first: <T extends AnyArray>(array: [...T]) => At<T, "0">;
+const second: <T extends AnyArray>(array: [...T]) => At<T, "1">;
+const secondToLast: <T extends AnyArray>(array: [...T]) => At<T, "-2">;
+const last: <T extends AnyArray>(array: [...T]) => At<T, "-1">;
 
-  toArray(): T;
-}
+const map: <T extends AnyArray, U>(
+  callback: (value: ElementOf<T>, index: number) => U,
+  array: [...T]
+) => Map<T, U>;
 
-// `sta` is short for strongly typed array
-export const sta = <T extends AnyArray>(
-  items: [...T]
-): StronglyTypedArray<[...T]> => new StronglyTypedArray(items);
+// TODO: length
 ```
 
 ### Supported methods
 
 - `length` (with `>=` comparator)
 - `map`
+- `at`
