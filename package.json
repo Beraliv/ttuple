@@ -10,7 +10,8 @@
   ],
   "scripts": {
     "build": "tsup src/index.ts --format esm --dts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
