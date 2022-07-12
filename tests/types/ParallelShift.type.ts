@@ -21,5 +21,7 @@ type cases = [
   AssertTrue<IsExact<ParallelShift<T1, SSASS>, undefined>>,
   AssertTrue<IsExact<ParallelShift<T2, A>, string>>,
   AssertTrue<IsExact<ParallelShift<T2, SAS>, string>>,
-  AssertTrue<IsExact<ParallelShift<T2, SSASS>, undefined>>
+  AssertTrue<IsExact<ParallelShift<T2, SSASS>, undefined>>,
+  AssertTrue<IsExact<ParallelShift<SAS, SAS>, string | undefined>>,
+  AssertTrue<IsExact<ParallelShift<SSASS, SAS>, string>>
 ];

@@ -1,9 +1,9 @@
 import { AnyArray } from "./AnyArray";
-import { IsTuple } from "./IsTuple";
 import { TupleToArray } from "./TupleToArray";
 import { IsArray } from "./IsArray";
 import { IsNever } from "./IsNever";
 import { ElementOf } from "./ElementOf";
+import { IsFiniteTuple } from "./IsFiniteTuple";
 
 type TupleShift<T extends AnyArray> = T extends [any, ...infer Tail, any]
   ? Tail
@@ -19,9 +19,11 @@ type ParallelShift<
 > = IsArray<U> extends true
   ? IsNever<ElementOf<T>> extends true
     ? undefined
-    : IsTuple<T> extends true
-    ? T[0]
-    : T[0] | undefined
-  : ParallelShift<Shift<T>, TupleShift<U>>;
+    : IsArray<T> extends true
+    ? T[0] | undefined
+    : T[0]
+  : IsFiniteTuple<T> extends true
+  ? ParallelShift<Shift<T>, TupleShift<U>>
+  : ParallelShift<TupleShift<T>, TupleShift<U>>;
 
 export type { ParallelShift };
