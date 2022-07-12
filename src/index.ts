@@ -1,103 +1,8 @@
-type AnyArray = readonly any[];
-
-type Map<T, U> = any[] extends T
-  ? U[]
-  : T extends [any, ...infer Tail]
-  ? [U, ...Map<Tail, U>]
-  : [];
-
-type ElementOf<T extends AnyArray> = T extends (infer V)[] ? V : never;
-
-type DigitMapping<T> = {
-  "0": [];
-  "1": [T];
-  "2": [T, T];
-  "3": [T, T, T];
-  "4": [T, T, T, T];
-  "5": [T, T, T, T, T];
-  "6": [T, T, T, T, T, T];
-  "7": [T, T, T, T, T, T, T];
-  "8": [T, T, T, T, T, T, T, T];
-  "9": [T, T, T, T, T, T, T, T, T];
-};
-
-type Multiply10<T extends AnyArray> = [
-  ...T,
-  ...T,
-  ...T,
-  ...T,
-  ...T,
-  ...T,
-  ...T,
-  ...T,
-  ...T,
-  ...T
-];
-
-type Add<N1 extends AnyArray, N2 extends AnyArray> = [...N1, ...N2];
-
-type ToTuple<
-  V,
-  S extends string,
-  T extends AnyArray = []
-> = S extends `${infer D}${infer Rest}`
-  ? ToTuple<
-      V,
-      Rest,
-      Add<Multiply10<T>, DigitMapping<V>[D & keyof DigitMapping<V>]>
-    >
-  : [...T, ...V[], ...T];
-
-type TupleToArray<T extends AnyArray> = ElementOf<T>[];
-
-type IsFixedLengthTuple<T extends AnyArray> = T extends any[] ? true : false;
-
-type Drop<T extends AnyArray> = T extends [any, ...infer Tail, any]
-  ? Tail
-  : TupleToArray<T>;
-
-type IsTuple<T> = any[] extends T ? false : true;
-
-type First<T extends AnyArray> = T[0];
-
-type IsEmptyTuple<T extends AnyArray> = T extends [] ? true : false;
-
-type IsEmptyTupleOrNumberArray<T extends AnyArray> = [] extends T
-  ? true
-  : false;
-
-type ParallelDrop<
-  T extends AnyArray,
-  U extends AnyArray
-> = IsEmptyTupleOrNumberArray<U> extends true
-  ? IsTuple<T> extends true
-    ? First<T>
-    : First<T> | undefined
-  : ParallelDrop<Drop<T>, Drop<U>>;
-
-type ParallelPop<
-  T extends AnyArray,
-  U extends AnyArray
-> = IsEmptyTupleOrNumberArray<U> extends true
-  ? IsTuple<T> extends true
-    ? First<T>
-    : First<T> | undefined
-  : ParallelPop<Drop<T>, Drop<U>>;
-
-type Get<T extends AnyArray, N extends string> = IsEmptyTuple<T> extends true
-  ? undefined
-  : N extends `-${infer M}`
-  ? ParallelPop<[ElementOf<T>, ...T, ElementOf<T>], ToTuple<ElementOf<T>, M>>
-  : N extends `${number}`
-  ? ParallelDrop<T, ToTuple<ElementOf<T>, N>>
-  : never;
-
-type Case1 = Get<[number], "1">;
-type Case2 = ParallelDrop<[number], ToTuple<ElementOf<[number]>, "1">>;
-type Case3 = ToTuple<ElementOf<[number]>, "1">;
-type Case4 = IsEmptyTupleOrNumberArray<[number, ...number[], number]>;
-type Case5 = Drop<[number]>;
-type Case6 = Drop<[number, ...number[], number]>;
+import { ToTuple } from "./types/ToTuple";
+import { Map } from "./types/Map";
+import { At } from "./types/At";
+import { ElementOf } from "./types/ElementOf";
+import { AnyArray } from "./types/AnyArray";
 
 type LengthComparison = `>= ${number}`;
 
@@ -110,7 +15,7 @@ const toTuple = <T extends AnyArray>(array: [...T]): T => array;
 const at =
   <N extends number>(index: N) =>
   <T extends AnyArray>(array: [...T]) =>
-    array.at(index) as Get<T, `${N}`>;
+    array.at(index) as At<T, `${N}`>;
 
 const first = at(0);
 const second = at(1);
@@ -139,7 +44,7 @@ class StronglyTypedArray<T extends AnyArray> {
     throw orThrows();
   }
 
-  at<N extends number, S extends string = `${N}`>(index: N): Get<T, S> {
+  at<N extends number, S extends string = `${N}`>(index: N): At<T, S> {
     return this.#items[index];
   }
 
