@@ -1,24 +1,15 @@
 import { AnyArray } from "./types/AnyArray";
 import { ElementOf } from "./types/ElementOf";
+import { IsTuple } from "./types/IsTuple";
+import { ParallelShift } from "./types/ParallelShift";
 import { ToTuple } from "./types/ToTuple";
+import { TupleToArray } from "./types/TupleToArray";
 
 type Map<T, U> = any[] extends T
   ? U[]
   : T extends [any, ...infer Tail]
   ? [U, ...Map<Tail, U>]
   : [];
-
-type Shift<T extends AnyArray> = T extends [any, ...infer Tail]
-  ? Tail
-  : TupleToArray<T>;
-
-type IsTuple<T> = any[] extends T ? false : true;
-
-type ParallelShift<T extends AnyArray, U extends AnyArray> = [] extends U
-  ? IsTuple<T> extends true
-    ? T[0]
-    : T[0] | undefined
-  : ParallelShift<Shift<T>, Shift<U>>;
 
 type Pop<T extends AnyArray> = T extends [...infer Head, any]
   ? Head
@@ -35,8 +26,6 @@ type Get<T extends AnyArray, N extends string> = N extends `-${infer M}`
   : N extends `${number}`
   ? ParallelShift<T, ToTuple<ElementOf<T>, N>>
   : never;
-
-type TupleToArray<T extends AnyArray> = ElementOf<T>[];
 
 type LengthComparison = `>= ${number}`;
 
