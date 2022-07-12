@@ -1,7 +1,6 @@
 import { AnyArray } from "./types/AnyArray";
+import { At } from "./types/At";
 import { ElementOf } from "./types/ElementOf";
-import { ParallelPop } from "./types/ParallelPop";
-import { ParallelShift } from "./types/ParallelShift";
 import { ToTuple } from "./types/ToTuple";
 
 type Map<T, U> = any[] extends T
@@ -9,12 +8,6 @@ type Map<T, U> = any[] extends T
   : T extends [any, ...infer Tail]
   ? [U, ...Map<Tail, U>]
   : [];
-
-type Get<T extends AnyArray, N extends string> = N extends `-${infer M}`
-  ? ParallelPop<[ElementOf<T>, ...T, ElementOf<T>], ToTuple<ElementOf<T>, M>>
-  : N extends `${number}`
-  ? ParallelShift<T, ToTuple<ElementOf<T>, N>>
-  : never;
 
 type LengthComparison = `>= ${number}`;
 
@@ -44,7 +37,7 @@ class StronglyTypedArray<T extends AnyArray> {
     throw orThrows();
   }
 
-  at<N extends number, S extends string = `${N}`>(index: N): Get<T, S> {
+  at<N extends number, S extends string = `${N}`>(index: N): At<T, S> {
     return this.#items[index];
   }
 
