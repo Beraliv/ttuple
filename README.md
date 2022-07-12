@@ -11,37 +11,37 @@ It's recommended to enable [noPropertyAccessFromIndexSignature](https://www.type
 1. Creates tuples
 
 ```ts
-import sta from 'strict-typed-array';
+import { toTuple } from "ttuple";
 
 class Segment {
   public bitrate: number = -1;
 }
 
-// ❌ Without strict-typed-array
+// ❌ Without ttuple
 
 const segments = [new Segment()];
 
-segments
+segments;
 // ^? const segments: Segment[]
 
-// ✅ With strict-typed-array
+// ✅ With ttuple
 
-const segments = sta([new Segment()).toArray();
+const segments = toTuple([new Segment()]);
 
-segments
+segments;
 // ^? const segments: [Segment]
 ```
 
 2. Iterates over array and saves tuple type
 
 ```ts
-import sta from "strict-typed-array";
+import { map } from "ttuple";
 
 class Segment {
   public bitrate: number = -1;
 }
 
-// ❌ Without strict-typed-array
+// ❌ Without ttuple
 
 const segments: [Segment] = [new Segment()];
 
@@ -50,11 +50,9 @@ const bitrates = segments.map((segment) => segment.bitrate);
 bitrates;
 // ^? const bitrates = number[]
 
-// ✅ With strict-typed-array
+// ✅ With ttuple
 
-const bitrates = sta([new Segment()])
-  .map((segment) => segment.bitrate)
-  .toArray();
+const bitrates = map((segment) => segment.bitrate, [new Segment()]);
 
 bitrates;
 // ^? const bitrates = [number]
@@ -63,7 +61,7 @@ bitrates;
 3. Checks array length and returns array element
 
 ```ts
-import sta from "strict-typed-array";
+import { first, length } from "ttuple";
 
 class Segment {
   public bitrate: number = -1;
@@ -71,7 +69,7 @@ class Segment {
 
 const segments: Segment[] = [];
 
-// ❌ Without strict-typed-array
+// ❌ Without ttuple
 
 if (segments.length < 1) {
   throw new Error("Missing segment element");
@@ -82,18 +80,20 @@ const firstSegment = segments[0];
 firstSegment;
 // ^? const firstSegment: Segment | undefined
 
-// ✅ With strict-typed-array
+// ✅ With ttuple
 
-const firstSegment = sta(segments)
-  .length(">= 1", () => new Error("Missing segment element"))
-  .at(0);
+if (!length(segments, ">= 1")) {
+  throw new Error("Missing segment element");
+}
+
+const firstSegment = first(segments);
 
 firstSegment;
 // ^? const firstSegment: Segment
 ```
 
 ```ts
-import sta from "strict-typed-array";
+import { length, last } from "ttuple";
 
 class Segment {
   public bitrate: number = -1;
@@ -101,7 +101,7 @@ class Segment {
 
 const segments: Segment[] = [];
 
-// ❌ Without strict-typed-array
+// ❌ Without ttuple
 
 if (segments.length < 1) {
   throw new Error("Missing segment element");
@@ -112,11 +112,13 @@ const lastSegment = segments[segments.length - 1];
 lastSegment;
 // ^? const lastSegment: Segment | undefined
 
-// ✅ With strict-typed-array
+// ✅ With ttuple
 
-const lastSegment = sta(segments)
-  .length(">= 1", () => new Error("Missing segment element"))
-  .at(-1);
+if (!length(segments, ">= 1")) {
+  throw new Error("Missing segment element");
+}
+
+const lastSegment = last(segments);
 
 lastSegment;
 // ^? const lastSegment: Segment
@@ -125,28 +127,34 @@ lastSegment;
 ## API
 
 ```ts
-class StronglyTypedArray<T extends AnyArray> {
-  at<N extends number, S extends string = `${N}`>(index: N): Get<T, S>;
+const toTuple: <T extends AnyArray>(array: [...T]) => T;
 
-  length<S extends LengthComparison>(
-    condition: S,
-    orThrows: () => Error
-  ): StronglyTypedArray<ToTuple<ElementOf<T>, ExtractLength<S>>>;
+const at: <N extends number>(
+  index: N
+) => <T extends AnyArray>(array: [...T]) => At<T, `${N}`>;
 
-  map<U>(
-    callback: (value: ElementOf<T>, index: number) => U
-  ): StronglyTypedArray<Map<T, U>>;
+const first: <T extends AnyArray>(array: [...T]) => At<T, "0">;
+const second: <T extends AnyArray>(array: [...T]) => At<T, "1">;
+const secondToLast: <T extends AnyArray>(array: [...T]) => At<T, "-2">;
+const last: <T extends AnyArray>(array: [...T]) => At<T, "-1">;
 
-  toArray(): T;
-}
+const map: <T extends AnyArray, U>(
+  callback: (value: ElementOf<T>, index: number) => U,
+  array: [...T]
+) => Map<T, U>;
 
-// `sta` is short for strongly typed array
-export const sta = <T extends AnyArray>(
-  items: [...T]
-): StronglyTypedArray<[...T]> => new StronglyTypedArray(items);
+const length: <
+  T extends AnyArray,
+  S extends `>= ${number}`,
+  R extends _ToTuple<ElementOf<T>, ExtractLength<S>, []>
+>(
+  array: T,
+  condition: S
+) => array is R extends T ? R : never;
 ```
 
 ### Supported methods
 
 - `length` (with `>=` comparator)
 - `map`
+- `at`

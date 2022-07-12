@@ -7,5 +7,6 @@ type cases = [
   AssertTrue<IsExact<IsTuple<[string]>, true>>,
   AssertTrue<IsExact<IsTuple<[string, string]>, true>>,
   AssertTrue<IsExact<IsTuple<[string, ...string[], string]>, true>>,
-  AssertTrue<IsExact<IsTuple<[]>, true>>
+  AssertTrue<IsExact<IsTuple<[]>, true>>,
+  AssertTrue<IsExact<IsTuple<never[]>, true>>
 ];
