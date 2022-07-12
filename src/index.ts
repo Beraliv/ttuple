@@ -2,12 +2,7 @@ import { AnyArray } from "./types/AnyArray";
 import { At } from "./types/At";
 import { ElementOf } from "./types/ElementOf";
 import { ToTuple } from "./types/ToTuple";
-
-type Map<T, U> = any[] extends T
-  ? U[]
-  : T extends [any, ...infer Tail]
-  ? [U, ...Map<Tail, U>]
-  : [];
+import { Map } from "./types/Map";
 
 type LengthComparison = `>= ${number}`;
 
