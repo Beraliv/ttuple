@@ -1,12 +1,11 @@
-import { AnyArray } from "../types/AnyArray";
+import { AnyArray } from "./types/AnyArray";
+import { ElementOf } from "./types/ElementOf";
 
 type Map<T, U> = any[] extends T
   ? U[]
   : T extends [any, ...infer Tail]
   ? [U, ...Map<Tail, U>]
   : [];
-
-type ElementOf<T extends AnyArray> = T extends (infer V)[] ? V : never;
 
 type DigitMapping<T> = {
   "0": [];

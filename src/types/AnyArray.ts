@@ -1,3 +1,3 @@
 type AnyArray = readonly any[];
 
-export { AnyArray };
+export type { AnyArray };
