@@ -13,20 +13,15 @@ type cases = [
   AssertTrue<IsExact<At<RA, "1">, string | undefined>>,
   AssertTrue<IsExact<At<A, "1">, string | undefined>>,
   AssertTrue<IsExact<At<T0, "1">, undefined>>,
-  // @ts-expect-error: expected `undefined` but got `never`
   AssertTrue<IsExact<At<T1, "1">, undefined>>,
-  // @ts-expect-error: expected `string` but got `undefined`
   AssertTrue<IsExact<At<T2, "1">, string>>,
   AssertTrue<IsExact<At<T3, "1">, string>>,
   // 2
   AssertTrue<IsExact<At<RA, "2">, string | undefined>>,
   AssertTrue<IsExact<At<A, "2">, string | undefined>>,
   AssertTrue<IsExact<At<T0, "2">, undefined>>,
-  // @ts-expect-error: expected `undefined` but got `never`
   AssertTrue<IsExact<At<T1, "2">, undefined>>,
-  // @ts-expect-error: expected `undefined` but got `never`
   AssertTrue<IsExact<At<T2, "2">, undefined>>,
-  // @ts-expect-error: expected `string` but got `undefined`
   AssertTrue<IsExact<At<T3, "2">, string>>,
   // 0
   AssertTrue<IsExact<At<RA, "0">, string | undefined>>,
