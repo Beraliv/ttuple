@@ -48,7 +48,11 @@ type ToTuple<
     >
   : [...T, ...V[], ...T];
 
-type Shift<T extends AnyArray> = T extends [any, ...infer Tail]
+type TupleToArray<T extends AnyArray> = ElementOf<T>[];
+
+type IsFixedLengthTuple<T extends AnyArray> = T extends any[] ? true : false;
+
+type Drop<T extends AnyArray> = T extends [any, ...infer Tail, any]
   ? Tail
   : TupleToArray<T>;
 
@@ -56,33 +60,44 @@ type IsTuple<T> = any[] extends T ? false : true;
 
 type First<T extends AnyArray> = T[0];
 
-type ParallelShift<T extends AnyArray, U extends AnyArray> = [] extends U
-  ? IsTuple<T> extends true
-    ? First<T>
-    : First<T> | undefined
-  : ParallelShift<Shift<T>, Shift<U>>;
-
-type Pop<T extends AnyArray> = T extends [...infer Head, any]
-  ? Head
-  : TupleToArray<T>;
-
-type ParallelPop<T extends AnyArray, U extends AnyArray> = [] extends U
-  ? IsTuple<T> extends true
-    ? First<T>
-    : First<T> | undefined
-  : ParallelPop<Pop<T>, Pop<U>>;
-
 type IsEmptyTuple<T extends AnyArray> = T extends [] ? true : false;
+
+type IsEmptyTupleOrNumberArray<T extends AnyArray> = [] extends T
+  ? true
+  : false;
+
+type ParallelDrop<
+  T extends AnyArray,
+  U extends AnyArray
+> = IsEmptyTupleOrNumberArray<U> extends true
+  ? IsTuple<T> extends true
+    ? First<T>
+    : First<T> | undefined
+  : ParallelDrop<Drop<T>, Drop<U>>;
+
+type ParallelPop<
+  T extends AnyArray,
+  U extends AnyArray
+> = IsEmptyTupleOrNumberArray<U> extends true
+  ? IsTuple<T> extends true
+    ? First<T>
+    : First<T> | undefined
+  : ParallelPop<Drop<T>, Drop<U>>;
 
 type Get<T extends AnyArray, N extends string> = IsEmptyTuple<T> extends true
   ? undefined
   : N extends `-${infer M}`
   ? ParallelPop<[ElementOf<T>, ...T, ElementOf<T>], ToTuple<ElementOf<T>, M>>
   : N extends `${number}`
-  ? ParallelShift<T, ToTuple<ElementOf<T>, N>>
+  ? ParallelDrop<T, ToTuple<ElementOf<T>, N>>
   : never;
 
-type TupleToArray<T extends AnyArray> = ElementOf<T>[];
+type Case1 = Get<[number], "1">;
+type Case2 = ParallelDrop<[number], ToTuple<ElementOf<[number]>, "1">>;
+type Case3 = ToTuple<ElementOf<[number]>, "1">;
+type Case4 = IsEmptyTupleOrNumberArray<[number, ...number[], number]>;
+type Case5 = Drop<[number]>;
+type Case6 = Drop<[number, ...number[], number]>;
 
 type LengthComparison = `>= ${number}`;
 
@@ -93,9 +108,9 @@ type ExtractLength<S extends LengthComparison> = S extends `>= ${infer N}`
 const toTuple = <T extends AnyArray>(array: [...T]): T => array;
 
 const at =
-  <N extends number, S extends string = `${N}`>(index: N) =>
+  <N extends number>(index: N) =>
   <T extends AnyArray>(array: [...T]) =>
-    array.at(index) as Get<T, S>;
+    array.at(index) as Get<T, `${N}`>;
 
 const first = at(0);
 const second = at(1);
