@@ -143,7 +143,14 @@ const map: <T extends AnyArray, U>(
   array: [...T]
 ) => Map<T, U>;
 
-// TODO: length
+const length: <
+  T extends AnyArray,
+  S extends `>= ${number}`,
+  R extends _ToTuple<ElementOf<T>, ExtractLength<S>, []>
+>(
+  array: T,
+  condition: S
+) => array is R extends T ? R : never;
 ```
 
 ### Supported methods

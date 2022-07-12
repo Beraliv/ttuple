@@ -27,49 +27,21 @@ const map = <T extends AnyArray, U>(
   array: [...T]
 ) => array.map(callback) as Map<T, U>;
 
-class StronglyTypedArray<T extends AnyArray> {
-  #items: T;
+const length = <
+  T extends AnyArray,
+  S extends LengthComparison,
+  R extends ToTuple<ElementOf<T>, ExtractLength<S>>
+>(
+  array: T,
+  condition: S
+): array is R extends T ? R : never => {
+  const expectedLength = Number(condition.split(" ")[1]);
 
-  constructor(items: T) {
-    this.#items = items;
+  if (array.length >= expectedLength) {
+    return true;
   }
 
-  length<S extends LengthComparison>(
-    condition: S,
-    orThrows: () => Error
-  ): StronglyTypedArray<ToTuple<ElementOf<T>, ExtractLength<S>>> {
-    const expectedLength = Number(condition.split(" ")[1]);
-
-    if (this.#items.length >= expectedLength) {
-      return this as unknown as StronglyTypedArray<
-        ToTuple<ElementOf<T>, ExtractLength<S>>
-      >;
-    }
-
-    throw orThrows();
-  }
-
-  at<N extends number, S extends string = `${N}`>(index: N): At<T, S> {
-    return this.#items[index];
-  }
-
-  toArray(): T {
-    return this.#items;
-  }
-}
-
-export const sta = <T extends AnyArray>(
-  items: [...T]
-): StronglyTypedArray<[...T]> => new StronglyTypedArray(items);
-
-export default sta;
-export {
-  StronglyTypedArray,
-  at,
-  toTuple,
-  first,
-  second,
-  secondToLast,
-  last,
-  map,
+  return false;
 };
+
+export { at, first, last, length, map, second, secondToLast, toTuple };
