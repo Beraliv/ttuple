@@ -22,6 +22,11 @@ const second = at(1);
 const secondToLast = at(-2);
 const last = at(-1);
 
+const map = <T extends AnyArray, U>(
+  callback: (value: ElementOf<T>, index: number) => U,
+  array: [...T]
+) => array.map(callback) as Map<T, U>;
+
 class StronglyTypedArray<T extends AnyArray> {
   #items: T;
 
@@ -48,15 +53,6 @@ class StronglyTypedArray<T extends AnyArray> {
     return this.#items[index];
   }
 
-  map<U>(
-    callback: (value: ElementOf<T>, index: number) => U
-  ): StronglyTypedArray<Map<T, U>> {
-    // @ts-expect-error: T => U
-    this.#items = this.#items.map(callback);
-    // @ts-expect-error: StronglyTypedArray<T> => StronglyTypedArray<U>
-    return this;
-  }
-
   toArray(): T {
     return this.#items;
   }
@@ -67,4 +63,13 @@ export const sta = <T extends AnyArray>(
 ): StronglyTypedArray<[...T]> => new StronglyTypedArray(items);
 
 export default sta;
-export { StronglyTypedArray, at, toTuple, first, second, secondToLast, last };
+export {
+  StronglyTypedArray,
+  at,
+  toTuple,
+  first,
+  second,
+  secondToLast,
+  last,
+  map,
+};

@@ -35,7 +35,7 @@ segments;
 2. Iterates over array and saves tuple type
 
 ```ts
-import sta from "ttuple";
+import { map } from "ttuple";
 
 class Segment {
   public bitrate: number = -1;
@@ -52,9 +52,7 @@ bitrates;
 
 // ✅ With ttuple
 
-const bitrates = sta([new Segment()])
-  .map((segment) => segment.bitrate)
-  .toArray();
+const bitrates = map((segment) => segment.bitrate, [new Segment()]);
 
 bitrates;
 // ^? const bitrates = [number]
