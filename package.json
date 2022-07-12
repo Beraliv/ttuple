@@ -1,6 +1,6 @@
 {
-  "name": "strongly-typed-array",
-  "version": "0.1.0",
+  "name": "ttuple",
+  "version": "0.2.1",
   "description": "Strongly typed Array",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,11 +10,12 @@
   ],
   "scripts": {
     "build": "tsup src/index.ts --format esm --dts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Beraliv/strongly-typed-array.git"
+    "url": "git+https://github.com/Beraliv/ttuple.git"
   },
   "keywords": [
     "typescript",
@@ -23,9 +24,9 @@
   "author": "Alexey Berezin <beraliv.spb@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Beraliv/strongly-typed-array/issues"
+    "url": "https://github.com/Beraliv/ttuple/issues"
   },
-  "homepage": "https://github.com/Beraliv/strongly-typed-array#readme",
+  "homepage": "https://github.com/Beraliv/ttuple#readme",
   "dependencies": {
     "typescript": "4.7.3"
   },
