@@ -29,11 +29,11 @@ const map = <T extends AnyArray, U>(
 
 const length = <
   T extends AnyArray,
-  S extends LengthComparison,
-  R extends ToTuple<ElementOf<T>, ExtractLength<S>>
+  S extends `${number}`,
+  R = ToTuple<ElementOf<T>, S>
 >(
   array: T,
-  condition: S
+  condition: `>= ${S}`
 ): array is R extends T ? R : never => {
   const expectedLength = Number(condition.split(" ")[1]);
 
