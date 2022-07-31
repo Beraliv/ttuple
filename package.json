@@ -9,7 +9,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format esm --dts",
+    "build": "tsc --project tsconfig.json",
     "typecheck": "tsc --noEmit",
     "prepare": "npm run build"
   },
@@ -28,10 +28,9 @@
   },
   "homepage": "https://github.com/Beraliv/ttuple#readme",
   "dependencies": {
-    "typescript": "4.7.3"
+    "typescript": "4.7.4"
   },
   "devDependencies": {
-    "conditional-type-checks": "1.0.5",
-    "tsup": "6.0.1"
+    "conditional-type-checks": "1.0.5"
   }
 }
