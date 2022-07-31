@@ -4,12 +4,6 @@ import { At } from "./types/At";
 import { ElementOf } from "./types/ElementOf";
 import { AnyArray } from "./types/AnyArray";
 
-type LengthComparison = `>= ${number}`;
-
-type ExtractLength<S extends LengthComparison> = S extends `>= ${infer N}`
-  ? `${N}`
-  : `${number}`;
-
 const toTuple = <T extends AnyArray>(array: [...T]): T => array;
 
 const at =
