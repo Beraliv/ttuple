@@ -8,7 +8,7 @@ It's recommended to enable [noPropertyAccessFromIndexSignature](https://www.type
 
 ## How to use
 
-1. Creates tuples
+### Creates tuples
 
 ```ts
 import { toTuple } from "ttuple";
@@ -19,20 +19,22 @@ class Segment {
 
 // ❌ Without ttuple
 
-const segments = [new Segment()];
+const arraySegments = [new Segment()];
 
-segments;
-// ^? const segments: Segment[]
+arraySegments;
+// ^? const arraySegments: Segment[]
 
 // ✅ With ttuple
 
-const segments = toTuple([new Segment()]);
+const tupleSegments = toTuple([new Segment()]);
 
-segments;
-// ^? const segments: [Segment]
+tupleSegments;
+// ^? const tupleSegments: [Segment]
 ```
 
-2. Iterates over array and saves tuple type
+Playground – https://tsplay.dev/NlE5Om 🏝
+
+### Iterates over array and saves tuple type
 
 ```ts
 import { map } from "ttuple";
@@ -45,20 +47,24 @@ class Segment {
 
 const segments: [Segment] = [new Segment()];
 
-const bitrates = segments.map((segment) => segment.bitrate);
+const arrayBitrates = segments.map((segment) => segment.bitrate);
 
-bitrates;
-// ^? const bitrates = number[]
+arrayBitrates;
+// ^? const arrayBitrates = number[]
 
 // ✅ With ttuple
 
-const bitrates = map((segment) => segment.bitrate, [new Segment()]);
+const tupleBitrates = map((segment) => segment.bitrate, [new Segment()]);
 
-bitrates;
-// ^? const bitrates = [number]
+tupleBitrates;
+// ^? const tupleBitrates = [number]
 ```
 
-3. Checks array length and returns array element
+Playground – https://tsplay.dev/wRG2EN 🏝
+
+### Checks array length and returns array element
+
+TODO – to be fixed for `noUncheckedIndexedAccess`
 
 ```ts
 import { first, length } from "ttuple";
@@ -75,10 +81,10 @@ if (segments.length < 1) {
   throw new Error("Missing segment element");
 }
 
-const firstSegment = segments[0];
+const arrayFirstSegment = segments[0];
 
-firstSegment;
-// ^? const firstSegment: Segment | undefined
+arrayFirstSegment;
+// ^? const arrayFirstSegment: Segment | undefined
 
 // ✅ With ttuple
 
@@ -86,11 +92,13 @@ if (!length(segments, ">= 1")) {
   throw new Error("Missing segment element");
 }
 
-const firstSegment = first(segments);
+const tupleFirstSegment = first(segments);
 
-firstSegment;
-// ^? const firstSegment: Segment
+tupleFirstSegment;
+// ^? const tupleFirstSegment: Segment
 ```
+
+Playground – https://tsplay.dev/NV4pxW 🏝
 
 ```ts
 import { length, last } from "ttuple";
@@ -107,10 +115,10 @@ if (segments.length < 1) {
   throw new Error("Missing segment element");
 }
 
-const lastSegment = segments[segments.length - 1];
+const arrayLastSegment = segments[segments.length - 1];
 
-lastSegment;
-// ^? const lastSegment: Segment | undefined
+arrayLastSegment;
+// ^? const arrayLastSegment: Segment | undefined
 
 // ✅ With ttuple
 
@@ -118,11 +126,13 @@ if (!length(segments, ">= 1")) {
   throw new Error("Missing segment element");
 }
 
-const lastSegment = last(segments);
+const tupleLastSegment = last(segments);
 
-lastSegment;
-// ^? const lastSegment: Segment
+tupleLastSegment;
+// ^? const tupleLastSegment: Segment
 ```
+
+Playground – https://tsplay.dev/WoaEpN 🏝
 
 ## API
 
