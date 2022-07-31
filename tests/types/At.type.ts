@@ -4,11 +4,11 @@ import { At } from "../../src/types/At";
 type RA = readonly string[];
 type A = string[];
 type SAS = [string, ...A, string];
-type SSASS = [string, ...A, string];
+type SSASS = [string, ...SAS, string];
 type T0 = [];
 type T1 = [string];
-type T2 = [string, string];
-type T3 = [string, string, string];
+type T2 = [string, ...T1];
+type T3 = [string, ...T2];
 
 type cases = [
   // 2
@@ -24,7 +24,6 @@ type cases = [
   AssertTrue<IsExact<At<RA, "1">, string | undefined>>,
   AssertTrue<IsExact<At<A, "1">, string | undefined>>,
   AssertTrue<IsExact<At<SAS, "1">, string | undefined>>,
-  // @ts-expect-error: expected `string` but got `string | undefined`
   AssertTrue<IsExact<At<SSASS, "1">, string>>,
   AssertTrue<IsExact<At<T0, "1">, undefined>>,
   AssertTrue<IsExact<At<T1, "1">, undefined>>,
@@ -52,7 +51,7 @@ type cases = [
   AssertTrue<IsExact<At<RA, "-2">, string | undefined>>,
   AssertTrue<IsExact<At<A, "-2">, string | undefined>>,
   AssertTrue<IsExact<At<SAS, "-2">, string | undefined>>,
-  AssertTrue<IsExact<At<SSASS, "-2">, string | undefined>>,
+  AssertTrue<IsExact<At<SSASS, "-2">, string>>,
   AssertTrue<IsExact<At<T0, "-2">, undefined>>,
   AssertTrue<IsExact<At<T1, "-2">, undefined>>,
   AssertTrue<IsExact<At<T2, "-2">, string>>,
