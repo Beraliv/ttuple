@@ -28,6 +28,6 @@
   },
   "homepage": "https://github.com/Beraliv/ttuple#readme",
   "dependencies": {
-    "typescript": "next"
+    "typescript": "4.8.0-dev.20220804"
   }
 }
