@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/Beraliv/ttuple#readme",
   "dependencies": {
-    "typescript": "4.7.4"
+    "typescript": "next"
   },
   "devDependencies": {
     "conditional-type-checks": "1.0.5"
