@@ -1,16 +1,17 @@
 import { AnyArray } from "./AnyArray";
 
-type DigitMapping<T> = {
+type DigitMapping = {
   "0": [];
-  "1": [T];
-  "2": [T, T];
-  "3": [T, T, T];
-  "4": [T, T, T, T];
-  "5": [T, T, T, T, T];
-  "6": [T, T, T, T, T, T];
-  "7": [T, T, T, T, T, T, T];
-  "8": [T, T, T, T, T, T, T, T];
-  "9": [T, T, T, T, T, T, T, T, T];
+  "1": [0];
+  "2": [0, 0];
+  "3": [0, 0, 0];
+  "4": [0, 0, 0, 0];
+  "5": [0, 0, 0, 0, 0];
+  "6": [0, 0, 0, 0, 0, 0];
+  "7": [0, 0, 0, 0, 0, 0, 0];
+  "8": [0, 0, 0, 0, 0, 0, 0, 0];
+  "9": [0, 0, 0, 0, 0, 0, 0, 0, 0];
+  [key: string]: 0[];
 };
 
 type Multiply10<T extends AnyArray> = [
@@ -29,17 +30,12 @@ type Multiply10<T extends AnyArray> = [
 type Add<N1 extends AnyArray, N2 extends AnyArray> = [...N1, ...N2];
 
 type _ToTuple<
-  V,
   S extends string,
-  T extends AnyArray = []
+  T extends AnyArray
 > = S extends `${infer D}${infer Rest}`
-  ? _ToTuple<
-      V,
-      Rest,
-      Add<Multiply10<T>, DigitMapping<V>[D & keyof DigitMapping<V>]>
-    >
-  : [...T, ...V[], ...T];
+  ? _ToTuple<Rest, Add<Multiply10<T>, DigitMapping[D]>>
+  : T;
 
-type ToTuple<V, S extends string> = _ToTuple<V, S>;
+type ToTuple<S extends string> = _ToTuple<S, []>;
 
 export type { ToTuple };
