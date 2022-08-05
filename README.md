@@ -8,7 +8,7 @@ It's recommended to enable [noPropertyAccessFromIndexSignature](https://www.type
 
 ## How to use
 
-1. Creates tuples
+### Creates tuples
 
 ```ts
 import { toTuple } from "ttuple";
@@ -19,20 +19,22 @@ class Segment {
 
 // ❌ Without ttuple
 
-const segments = [new Segment()];
+const arraySegments = [new Segment()];
 
-segments;
-// ^? const segments: Segment[]
+arraySegments;
+// ^? const arraySegments: Segment[]
 
 // ✅ With ttuple
 
-const segments = toTuple([new Segment()]);
+const tupleSegments = toTuple([new Segment()]);
 
-segments;
-// ^? const segments: [Segment]
+tupleSegments;
+// ^? const tupleSegments: [Segment]
 ```
 
-2. Iterates over array and saves tuple type
+Playground – https://tsplay.dev/NlE5Om 🏝
+
+### Iterates over array and saves tuple type
 
 ```ts
 import { map } from "ttuple";
@@ -45,20 +47,22 @@ class Segment {
 
 const segments: [Segment] = [new Segment()];
 
-const bitrates = segments.map((segment) => segment.bitrate);
+const arrayBitrates = segments.map((segment) => segment.bitrate);
 
-bitrates;
-// ^? const bitrates = number[]
+arrayBitrates;
+// ^? const arrayBitrates = number[]
 
 // ✅ With ttuple
 
-const bitrates = map((segment) => segment.bitrate, [new Segment()]);
+const tupleBitrates = map((segment) => segment.bitrate, [new Segment()]);
 
-bitrates;
-// ^? const bitrates = [number]
+tupleBitrates;
+// ^? const tupleBitrates = [number]
 ```
 
-3. Checks array length and returns array element
+Playground – https://tsplay.dev/wRG2EN 🏝
+
+### Checks array length and returns array element
 
 ```ts
 import { first, length } from "ttuple";
@@ -75,10 +79,10 @@ if (segments.length < 1) {
   throw new Error("Missing segment element");
 }
 
-const firstSegment = segments[0];
+const arrayFirstSegment = segments[0];
 
-firstSegment;
-// ^? const firstSegment: Segment | undefined
+arrayFirstSegment;
+// ^? const arrayFirstSegment: Segment | undefined
 
 // ✅ With ttuple
 
@@ -86,11 +90,13 @@ if (!length(segments, ">= 1")) {
   throw new Error("Missing segment element");
 }
 
-const firstSegment = first(segments);
+const tupleFirstSegment = first(segments);
 
-firstSegment;
-// ^? const firstSegment: Segment
+tupleFirstSegment;
+// ^? const tupleFirstSegment: Segment
 ```
+
+Playground – https://tsplay.dev/NV4pxW 🏝
 
 ```ts
 import { length, last } from "ttuple";
@@ -107,10 +113,10 @@ if (segments.length < 1) {
   throw new Error("Missing segment element");
 }
 
-const lastSegment = segments[segments.length - 1];
+const arrayLastSegment = segments[segments.length - 1];
 
-lastSegment;
-// ^? const lastSegment: Segment | undefined
+arrayLastSegment;
+// ^? const arrayLastSegment: Segment | undefined
 
 // ✅ With ttuple
 
@@ -118,39 +124,38 @@ if (!length(segments, ">= 1")) {
   throw new Error("Missing segment element");
 }
 
-const lastSegment = last(segments);
+const tupleLastSegment = last(segments);
 
-lastSegment;
-// ^? const lastSegment: Segment
+tupleLastSegment;
+// ^? const tupleLastSegment: Segment
 ```
+
+Playground – https://tsplay.dev/WoaEpN 🏝
 
 ## API
 
 ```ts
-const toTuple: <T extends AnyArray>(array: [...T]) => T;
+declare const toTuple: <T extends AnyArray>(array: [...T]) => T;
 
-const at: <N extends number>(
+declare const at: <N extends number>(
   index: N
 ) => <T extends AnyArray>(array: [...T]) => At<T, `${N}`>;
 
-const first: <T extends AnyArray>(array: [...T]) => At<T, "0">;
-const second: <T extends AnyArray>(array: [...T]) => At<T, "1">;
-const secondToLast: <T extends AnyArray>(array: [...T]) => At<T, "-2">;
-const last: <T extends AnyArray>(array: [...T]) => At<T, "-1">;
+declare const first: <T extends AnyArray>(array: [...T]) => At<T, "0">;
+declare const second: <T extends AnyArray>(array: [...T]) => At<T, "1">;
+declare const secondToLast: <T extends AnyArray>(array: [...T]) => At<T, "-2">;
+declare const last: <T extends AnyArray>(array: [...T]) => At<T, "-1">;
 
-const map: <T extends AnyArray, U>(
+declare const map: <T extends AnyArray, U>(
   callback: (value: ElementOf<T>, index: number) => U,
   array: [...T]
 ) => Map<T, U>;
 
-const length: <
+declare function length<
   T extends AnyArray,
-  S extends `>= ${number}`,
-  R extends _ToTuple<ElementOf<T>, ExtractLength<S>, []>
->(
-  array: T,
-  condition: S
-) => array is R extends T ? R : never;
+  S extends `${number}`,
+  R = ToTuple<ElementOf<T>, S>
+>(array: T, condition: `>= ${S}`): array is R extends T ? R : never;
 ```
 
 ### Supported methods
