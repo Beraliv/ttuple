@@ -64,8 +64,6 @@ Playground – https://tsplay.dev/wRG2EN 🏝
 
 ### Checks array length and returns array element
 
-TODO – to be fixed for `noUncheckedIndexedAccess`
-
 ```ts
 import { first, length } from "ttuple";
 
@@ -137,30 +135,27 @@ Playground – https://tsplay.dev/WoaEpN 🏝
 ## API
 
 ```ts
-const toTuple: <T extends AnyArray>(array: [...T]) => T;
+declare const toTuple: <T extends AnyArray>(array: [...T]) => T;
 
-const at: <N extends number>(
+declare const at: <N extends number>(
   index: N
 ) => <T extends AnyArray>(array: [...T]) => At<T, `${N}`>;
 
-const first: <T extends AnyArray>(array: [...T]) => At<T, "0">;
-const second: <T extends AnyArray>(array: [...T]) => At<T, "1">;
-const secondToLast: <T extends AnyArray>(array: [...T]) => At<T, "-2">;
-const last: <T extends AnyArray>(array: [...T]) => At<T, "-1">;
+declare const first: <T extends AnyArray>(array: [...T]) => At<T, "0">;
+declare const second: <T extends AnyArray>(array: [...T]) => At<T, "1">;
+declare const secondToLast: <T extends AnyArray>(array: [...T]) => At<T, "-2">;
+declare const last: <T extends AnyArray>(array: [...T]) => At<T, "-1">;
 
-const map: <T extends AnyArray, U>(
+declare const map: <T extends AnyArray, U>(
   callback: (value: ElementOf<T>, index: number) => U,
   array: [...T]
 ) => Map<T, U>;
 
-const length: <
+declare function length<
   T extends AnyArray,
-  S extends `>= ${number}`,
-  R extends _ToTuple<ElementOf<T>, ExtractLength<S>, []>
->(
-  array: T,
-  condition: S
-) => array is R extends T ? R : never;
+  S extends `${number}`,
+  R = ToTuple<ElementOf<T>, S>
+>(array: T, condition: `>= ${S}`): array is R extends T ? R : never;
 ```
 
 ### Supported methods
