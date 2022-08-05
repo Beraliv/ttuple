@@ -4,12 +4,6 @@ import { At } from "./types/At";
 import { ElementOf } from "./types/ElementOf";
 import { AnyArray } from "./types/AnyArray";
 
-type LengthComparison = `>= ${number}`;
-
-type ExtractLength<S extends LengthComparison> = S extends `>= ${infer N}`
-  ? `${N}`
-  : `${number}`;
-
 const toTuple = <T extends AnyArray>(array: [...T]): T => array;
 
 const at =
@@ -27,14 +21,12 @@ const map = <T extends AnyArray, U>(
   array: [...T]
 ) => array.map(callback) as Map<T, U>;
 
-const length = <
+function length<
   T extends AnyArray,
-  S extends LengthComparison,
-  R extends ToTuple<ElementOf<T>, ExtractLength<S>>
->(
-  array: T,
-  condition: S
-): array is R extends T ? R : never => {
+  S extends `${number}`,
+  R = ToTuple<ElementOf<T>, S>
+>(array: T, condition: `>= ${S}`): array is R extends T ? R : never;
+function length(array: AnyArray, condition: string): boolean {
   const expectedLength = Number(condition.split(" ")[1]);
 
   if (array.length >= expectedLength) {
@@ -42,6 +34,6 @@ const length = <
   }
 
   return false;
-};
+}
 
 export { at, first, last, length, map, second, secondToLast, toTuple };
