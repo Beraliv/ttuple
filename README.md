@@ -2,7 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/ttuple)](https://npm.im/ttuple)
 
-`Array` wrapper to make methods stricter
+Easier way to manipulate tuples in TypeScript
 
 It's recommended to enable [noPropertyAccessFromIndexSignature](https://www.typescriptlang.org/tsconfig#noPropertyAccessFromIndexSignature) option to see the difference
 
